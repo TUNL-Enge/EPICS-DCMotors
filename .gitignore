@@ -1,0 +1,11 @@
+# Ignore the manuals
+Manuals
+
+# Ignore installed files
+bin
+db
+dbd
+lib
+*.so
+*.o
+*.a

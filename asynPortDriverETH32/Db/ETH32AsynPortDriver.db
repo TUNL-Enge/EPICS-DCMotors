@@ -1,0 +1,109 @@
+###################################################################
+#  These records control run/stop                                 # 
+###################################################################
+record(bo, "$(P)$(R)Run")
+{
+    field(PINI,  "1")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))SIM_RUN")
+    field(ZNAM, "Stop")
+    field(ONAM, "Run")
+}
+
+record(bi, "$(P)$(R)Run_RBV")
+{
+    field(PINI, "1")
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))SIM_RUN")
+    field(ZNAM, "Stopped")
+    field(ZSV,  "NO_ALARM")
+    field(ONAM, "Running")
+    field(OSV,  "MINOR")
+    field(SCAN, "I/O Intr")
+}
+
+
+###################################################################
+#  These records are the digital pin 0, which controls forward    #
+#  direction of motor 1                                           #
+###################################################################
+record(bo, "$(P)$(R)M1For")
+{
+    field(PINI,  "0")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))MOTOR_1_FORWARD")
+    field(ZNAM, "Off")
+    field(ONAM, "On")
+}
+
+record(bi, "$(P)$(R)M1For_RBV")
+{
+    field(PINI, "0")
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))MOTOR_1_FORWARD")
+    field(ZNAM, "Off")
+    field(ZSV,  "NO_ALARM")
+    field(ONAM, "On")
+    field(OSV,  "MINOR")
+    field(SCAN, "I/O Intr")
+}
+
+###################################################################
+#  These records are the digital pin 0, which controls backward   #
+#  direction of motor 1                                           #
+###################################################################
+record(bo, "$(P)$(R)M1Back")
+{
+    field(PINI,  "0")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))MOTOR_1_BACKWARD")
+    field(ZNAM, "Off")
+    field(ONAM, "On")
+}
+
+record(bi, "$(P)$(R)M1Back_RBV")
+{
+    field(PINI, "0")
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))MOTOR_1_BACKWARD")
+    field(ZNAM, "Off")
+    field(ZSV,  "NO_ALARM")
+    field(ONAM, "On")
+    field(OSV,  "MINOR")
+    field(SCAN, "I/O Intr")
+}
+
+
+#######################################################################
+#  This record is the voltage on analog pin 0, corresponding to motor #
+#  1                                                                  #
+#######################################################################
+record(ai, "$(P)$(R)M1Pos_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynFloat64")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))MOTOR_1_POS")
+   field(PREC, "4")
+   field(SCAN, "I/O Intr")
+}
+
+
+###################################################################
+#  These records are the update time                              #
+###################################################################
+record(ao, "$(P)$(R)UpdateTime")
+{
+   field(PINI, "1")
+   field(DTYP, "asynFloat64")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))SIM_UPDATE_TIME")
+   field(PREC, "3")
+}
+
+record(ai, "$(P)$(R)UpdateTime_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynFloat64")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))SIM_UPDATE_TIME")
+   field(PREC, "3")
+   field(SCAN, "I/O Intr")
+}

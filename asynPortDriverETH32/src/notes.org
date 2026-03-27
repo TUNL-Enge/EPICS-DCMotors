@@ -1,0 +1,22 @@
+Things we need
+
+- =P_Run= - Turns the simulator on and off
+- =P_DOutChannel0On= - The 'on' status of Digital Output channel 0 (motor forward)
+- =P_DOutChannel1On= - The 'on' status of Digital Output channel 1 (motor backward)
+- =P_AInChannel0= - The reading on Analog Input channel 0
+- =P_UpdateTime= - For the simulation. How often to update the motor position readback
+
+  
+* Progress
+  - Pared down variables
+  - Wrote simulation task, which runs in a separate thread
+    - When simulation is running, it will look for whether a "Forward"
+      or "Backward" command is in place. If so, it'll continue to move
+      in that direction
+    - Will rail at max and min values
+    - Added function that will eventually call the ETH32 library to write to a pin
+    - Updated .h file
+    - Compiles!
+    - All complete *but doesn't move simulated motor!*
+    - *NOW MOVES SIMULATED MOTOR!* Hooray.
+    - Renamed variables so it's more obvious what each digital signal does

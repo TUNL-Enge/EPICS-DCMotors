@@ -1,0 +1,3 @@
+epicsEnvSet("IOC","iocBoot")
+epicsEnvSet("TOP","/data/EPICS/project/ETH32")
+epicsEnvSet("EPICS_BASE","/home/longland/project/EPICS/base")

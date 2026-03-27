@@ -1,0 +1,8 @@
+startup = "/data/EPICS/project/ETH32/iocBoot"
+putenv("IOC=iocBoot")
+top = "/data/EPICS/project/ETH32"
+putenv("TOP=/data/EPICS/project/ETH32")
+topbin = "/data/EPICS/project/ETH32/bin/linux-x86_64"
+epics_base = "/home/longland/project/EPICS/base"
+putenv("EPICS_BASE=/home/longland/project/EPICS/base")
+epics_basebin = "/home/longland/project/EPICS/base/bin/linux-x86_64"
