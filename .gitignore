@@ -9,3 +9,5 @@ lib
 *.so
 *.o
 *.a
+*.d
+/.agent-shell/

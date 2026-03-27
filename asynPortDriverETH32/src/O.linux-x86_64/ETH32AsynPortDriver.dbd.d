@@ -50,7 +50,22 @@
     /home/longland/project/EPICS/base/dbd/filters.dbd \
     /home/longland/project/EPICS/base/dbd/devSoft.dbd \
     /home/longland/project/EPICS/base/dbd/asSub.dbd \
-    /home/longland/project/EPICS/base/dbd/dbCore.dbd
+    /home/longland/project/EPICS/base/dbd/dbCore.dbd \
+    /home/longland/project/EPICS/synApps/support/asyn-R4-36/dbd/asyn.dbd \
+    /home/longland/project/EPICS/synApps/support/asyn-R4-36/dbd/asynRecord.dbd \
+    /home/longland/project/EPICS/synApps/support/asyn-R4-36/dbd/devEpics.dbd \
+    /home/longland/project/EPICS/synApps/support/asyn-R4-36/dbd/devAsynOctet.dbd \
+    /home/longland/project/EPICS/synApps/support/asyn-R4-36/dbd/devAsynInt32.dbd \
+    /home/longland/project/EPICS/synApps/support/asyn-R4-36/dbd/devAsynInt8Array.dbd \
+    /home/longland/project/EPICS/synApps/support/asyn-R4-36/dbd/devAsynInt16Array.dbd \
+    /home/longland/project/EPICS/synApps/support/asyn-R4-36/dbd/devAsynInt32Array.dbd \
+    /home/longland/project/EPICS/synApps/support/asyn-R4-36/dbd/devAsynInt32TimeSeries.dbd \
+    /home/longland/project/EPICS/synApps/support/asyn-R4-36/dbd/devAsynFloat64.dbd \
+    /home/longland/project/EPICS/synApps/support/asyn-R4-36/dbd/devAsynFloat32Array.dbd \
+    /home/longland/project/EPICS/synApps/support/asyn-R4-36/dbd/devAsynFloat64Array.dbd \
+    /home/longland/project/EPICS/synApps/support/asyn-R4-36/dbd/devAsynFloat64TimeSeries.dbd \
+    /home/longland/project/EPICS/synApps/support/asyn-R4-36/dbd/devAsynUInt32Digital.dbd \
+    /home/longland/project/EPICS/synApps/support/asyn-R4-36/dbd/devAsynRecord.dbd
 
 ../ETH32AsynPortDriverInclude.dbd:
 /home/longland/project/EPICS/base/dbd/base.dbd:
@@ -105,4 +120,19 @@
 /home/longland/project/EPICS/base/dbd/devSoft.dbd:
 /home/longland/project/EPICS/base/dbd/asSub.dbd:
 /home/longland/project/EPICS/base/dbd/dbCore.dbd:
+/home/longland/project/EPICS/synApps/support/asyn-R4-36/dbd/asyn.dbd:
+/home/longland/project/EPICS/synApps/support/asyn-R4-36/dbd/asynRecord.dbd:
+/home/longland/project/EPICS/synApps/support/asyn-R4-36/dbd/devEpics.dbd:
+/home/longland/project/EPICS/synApps/support/asyn-R4-36/dbd/devAsynOctet.dbd:
+/home/longland/project/EPICS/synApps/support/asyn-R4-36/dbd/devAsynInt32.dbd:
+/home/longland/project/EPICS/synApps/support/asyn-R4-36/dbd/devAsynInt8Array.dbd:
+/home/longland/project/EPICS/synApps/support/asyn-R4-36/dbd/devAsynInt16Array.dbd:
+/home/longland/project/EPICS/synApps/support/asyn-R4-36/dbd/devAsynInt32Array.dbd:
+/home/longland/project/EPICS/synApps/support/asyn-R4-36/dbd/devAsynInt32TimeSeries.dbd:
+/home/longland/project/EPICS/synApps/support/asyn-R4-36/dbd/devAsynFloat64.dbd:
+/home/longland/project/EPICS/synApps/support/asyn-R4-36/dbd/devAsynFloat32Array.dbd:
+/home/longland/project/EPICS/synApps/support/asyn-R4-36/dbd/devAsynFloat64Array.dbd:
+/home/longland/project/EPICS/synApps/support/asyn-R4-36/dbd/devAsynFloat64TimeSeries.dbd:
+/home/longland/project/EPICS/synApps/support/asyn-R4-36/dbd/devAsynUInt32Digital.dbd:
+/home/longland/project/EPICS/synApps/support/asyn-R4-36/dbd/devAsynRecord.dbd:
 ../O.Common/ETH32AsynPortDriver.dbd: ../Makefile

@@ -29,12 +29,17 @@
 
 #include "ETH32AsynPortDriver.h"
 #include <epicsExport.h>
+#include <unistd.h>
+
+#include "eth32.h"
 
 #define MIN_UPDATE_TIME                                                        \
   0.1 /* Minimum update time, to prevent CPU saturation                        \
        */
 
 #define MAX_ENUM_STRING_SIZE 20
+
+// #define HAVE_ETH32
 
 static const char *driverName = "ETH32AsynPortDriver";
 void simTask(void *drvPvt);
@@ -58,6 +63,16 @@ ETH32AsynPortDriver::ETH32AsynPortDriver(const char *portName)
 {
   asynStatus status;
   const char *functionName = "ETH32AsynPortDriver";
+
+#ifdef HAVE_ETH32
+  // Some parameters needed for connection with eth32
+  char hostname[] = "host";
+  // char *result;
+  int eth32result;
+  // eth32_handler event_handler_config={0}; // Initialize contents to all
+  // zeroes
+  eth32 handle;
+#endif
 
   eventId_ = epicsEventCreate(epicsEventEmpty);
   createParam(P_RunString, asynParamInt32, &P_Run);
@@ -83,6 +98,36 @@ ETH32AsynPortDriver::ETH32AsynPortDriver(const char *portName)
     printf("%s:%s: epicsThreadCreate failure\n", driverName, functionName);
     return;
   }
+
+#ifdef HAVE_ETH32
+  // Finally, connect with the ETH32
+  printf("\n\nHi! I'm about to open the eth32\n");
+  handle = eth32_open(hostname, ETH32_PORT, 5000, &eth32result);
+  if (handle == 0) {
+    printf("Error connecting to ETH32: %s\n", eth32_error_string(eth32result));
+    // return;
+  }
+
+  // Try turning on both LEDs just to make sure it's working
+  eth32_set_led(handle, 0, 1);
+  eth32_set_led(handle, 1, 1);
+  eth32_get_led(handle, 0, &eth32result);
+  printf("LED 0 is set to %d; ", eth32result);
+  eth32_get_led(handle, 0, &eth32result);
+  printf("LED 1 is set to %d\n", eth32result);
+  // Sleep, then try turning off both LEDs
+  sleep(10);
+  eth32_set_led(handle, 0, 0);
+  eth32_set_led(handle, 1, 0);
+  eth32_get_led(handle, 0, &eth32result);
+  printf("LED 0 is set to %d; ", eth32result);
+  eth32_get_led(handle, 0, &eth32result);
+  printf("LED 1 is set to %d\n", eth32result);
+
+  // Set Port A to be an output port
+  eth32_set_direction(handle, ETH32_PORT, 0);
+
+#endif
 }
 
 // Start the simulation

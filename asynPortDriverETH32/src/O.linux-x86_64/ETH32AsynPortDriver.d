@@ -43,4 +43,4 @@ ETH32AsynPortDriver.o: ../ETH32AsynPortDriver.cpp \
  /home/longland/project/EPICS/synApps/support/asyn-R4-36/include/asynOption.h \
  /home/longland/project/EPICS/synApps/support/asyn-R4-36/include/asynParamType.h \
  /home/longland/project/EPICS/synApps/support/asyn-R4-36/include/paramErrors.h \
- /home/longland/project/EPICS/base/include/epicsExport.h
+ /home/longland/project/EPICS/base/include/epicsExport.h ../eth32.h
