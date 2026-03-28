@@ -39,7 +39,17 @@
 
 #define MAX_ENUM_STRING_SIZE 20
 
-// #define HAVE_ETH32
+#define HAVE_ETH32
+
+#ifdef HAVE_ETH32
+// Some parameters needed for connection with eth32
+char hostname[] = "host";
+// char *result;
+int eth32result;
+// eth32_handler event_handler_config={0}; // Initialize contents to all
+// zeroes
+eth32 handle;
+#endif
 
 static const char *driverName = "ETH32AsynPortDriver";
 void simTask(void *drvPvt);
@@ -63,16 +73,6 @@ ETH32AsynPortDriver::ETH32AsynPortDriver(const char *portName)
 {
   asynStatus status;
   const char *functionName = "ETH32AsynPortDriver";
-
-#ifdef HAVE_ETH32
-  // Some parameters needed for connection with eth32
-  char hostname[] = "host";
-  // char *result;
-  int eth32result;
-  // eth32_handler event_handler_config={0}; // Initialize contents to all
-  // zeroes
-  eth32 handle;
-#endif
 
   eventId_ = epicsEventCreate(epicsEventEmpty);
   createParam(P_RunString, asynParamInt32, &P_Run);
@@ -125,7 +125,7 @@ ETH32AsynPortDriver::ETH32AsynPortDriver(const char *portName)
   printf("LED 1 is set to %d\n", eth32result);
 
   // Set Port A to be an output port
-  eth32_set_direction(handle, ETH32_PORT, 0);
+  eth32result = eth32_set_direction(handle, ETH32_PORT, 0);
 
 #endif
 }
@@ -307,12 +307,18 @@ void ETH32AsynPortDriver::setMotor1Forward() {
 
   // Get the setting
   getIntegerParam(P_Motor1Forward, &setting);
-  // Call the ETH32 library to actually turn on or off the pin
 
+#ifdef HAVE_ETH32
+  // Call the ETH32 library to actually turn on or off the pin
+  int result = eth32_output_byte(handle, ETH32_PORT, 85);
+  if (result) {
+    printf("Some kind of error happened when writing\n");
+  }
   // Print the output
   // asynPrint(pasynUser, ASYN_TRACEIO_DRIVER,
   //           "%s:%s: function=%d, name=%s, value=%f\n", driverName,
   //           functionName, function, paramName, value);
+#endif
 }
 
 /* Configuration routine.  Called directly, or from the iocsh function below */
