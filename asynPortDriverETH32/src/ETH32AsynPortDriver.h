@@ -51,6 +51,7 @@ private:
   epicsEventId eventId_;
   epicsFloat64 *pData_;
   epicsFloat64 *pTimeBase_;
-  // Function that actually calls the ETH32 library to turn on/off a digital pin
-  void setMotor1Forward();
+  // Functions that actually call the ETH32 library to turn on/off a digital pin
+  void setMotor1Forward();    // On Port 0, bit 0
+  void setMotor1Backward();   // On Port 0, bit 1
 };

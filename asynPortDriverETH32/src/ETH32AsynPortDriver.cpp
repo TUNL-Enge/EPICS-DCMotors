@@ -39,7 +39,7 @@
 
 #define MAX_ENUM_STRING_SIZE 20
 
-#define HAVE_ETH32
+//#define HAVE_ETH32
 
 #ifdef HAVE_ETH32
 // Some parameters needed for connection with eth32
@@ -124,8 +124,8 @@ ETH32AsynPortDriver::ETH32AsynPortDriver(const char *portName)
   eth32_get_led(handle, 0, &eth32result);
   printf("LED 1 is set to %d\n", eth32result);
 
-  // Set Port A to be an output port
-  eth32result = eth32_set_direction(handle, ETH32_PORT, 0);
+  // Set every pin on port 0 to be an output port (there are 8 pins)
+  eth32result = eth32_set_direction(handle, 0, DIR_OUTPUT);
 
 #endif
 }
@@ -221,10 +221,12 @@ asynStatus ETH32AsynPortDriver::writeInt32(asynUser *pasynUser,
 
   if (function == P_Run) {
     /* If run was set then wake up the simulation task */
-    if (value)
+    if (value){
       epicsEventSignal(eventId_);
-    else if (function == P_Motor1Forward) {
+    } else if (function == P_Motor1Forward) {
       setMotor1Forward();
+    } else if (function == P_Motor1Backward) {
+      setMotor1Backward();
     } else {
       /* All other parameters just get set in parameter list, no need to
        * act on them here */
@@ -310,9 +312,29 @@ void ETH32AsynPortDriver::setMotor1Forward() {
 
 #ifdef HAVE_ETH32
   // Call the ETH32 library to actually turn on or off the pin
-  int result = eth32_output_byte(handle, ETH32_PORT, 85);
+  int result = eth32_output_bit(handle, 0, 0, setting);
   if (result) {
-    printf("Some kind of error happened when writing\n");
+    printf("Some kind of error happened when writing: %d\n", result);
+  }
+  // Print the output
+  // asynPrint(pasynUser, ASYN_TRACEIO_DRIVER,
+  //           "%s:%s: function=%d, name=%s, value=%f\n", driverName,
+  //           functionName, function, paramName, value);
+#endif
+}
+// Turn on/off digital channel 0
+void ETH32AsynPortDriver::setMotor1Backward() {
+
+  epicsInt32 setting;
+
+  // Get the setting
+  getIntegerParam(P_Motor1Backward, &setting);
+
+#ifdef HAVE_ETH32
+  // Call the ETH32 library to actually turn on or off the pin
+  int result = eth32_output_bit(handle, 0, 1, setting);
+  if (result) {
+    printf("Some kind of error happened when writing: %d\n", result);
   }
   // Print the output
   // asynPrint(pasynUser, ASYN_TRACEIO_DRIVER,
