@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Widget</class>
+ <widget class="QWidget" name="Widget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Widget</string>
+  </property>
+  <widget class="QLabel" name="Logo">
+   <property name="geometry">
+    <rect>
+     <x>470</x>
+     <y>460</y>
+     <width>331</width>
+     <height>141</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>FENRIS</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap>:/images/FENRISLogo-notext.png</pixmap>
+   </property>
+   <property name="scaledContents">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QELabel" name="qelabel">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>70</y>
+     <width>81</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="variable" stdset="0">
+    <string>testETH32:motors:M1Pos_RBV</string>
+   </property>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QELabel</class>
+   <extends>QLabel</extends>
+   <header>QELabel.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
