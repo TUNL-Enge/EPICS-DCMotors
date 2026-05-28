@@ -39,11 +39,11 @@
 
 #define MAX_ENUM_STRING_SIZE 20
 
-//#define HAVE_ETH32
+#define HAVE_ETH32
 
 #ifdef HAVE_ETH32
 // Some parameters needed for connection with eth32
-char hostname[] = "host";
+char hostname[] = "192.168.2.100";
 // char *result;
 int eth32result;
 // eth32_handler event_handler_config={0}; // Initialize contents to all
@@ -223,15 +223,16 @@ asynStatus ETH32AsynPortDriver::writeInt32(asynUser *pasynUser,
     /* If run was set then wake up the simulation task */
     if (value){
       epicsEventSignal(eventId_);
-    } else if (function == P_Motor1Forward) {
-      setMotor1Forward();
-    } else if (function == P_Motor1Backward) {
-      setMotor1Backward();
-    } else {
+    }
+  } else if (function == P_Motor1Forward) {
+    setMotor1Forward();
+  } else if (function == P_Motor1Backward) {
+    setMotor1Backward();
+  } else {
       /* All other parameters just get set in parameter list, no need to
        * act on them here */
-    }
   }
+  
 
   /* Do callbacks so higher layers see any changes */
   status = (asynStatus)callParamCallbacks();
@@ -312,10 +313,14 @@ void ETH32AsynPortDriver::setMotor1Forward() {
 
 #ifdef HAVE_ETH32
   // Call the ETH32 library to actually turn on or off the pin
+  printf("Setting port 0, bit 0 to: %d\n", setting);
   int result = eth32_output_bit(handle, 0, 0, setting);
   if (result) {
     printf("Some kind of error happened when writing: %d\n", result);
   }
+  if(setting == 1)  eth32_set_led(handle, 0, 1);
+  if(setting == 0)   eth32_set_led(handle, 0, 0);
+
   // Print the output
   // asynPrint(pasynUser, ASYN_TRACEIO_DRIVER,
   //           "%s:%s: function=%d, name=%s, value=%f\n", driverName,
@@ -332,10 +337,13 @@ void ETH32AsynPortDriver::setMotor1Backward() {
 
 #ifdef HAVE_ETH32
   // Call the ETH32 library to actually turn on or off the pin
+  printf("Setting port 0, bit 1 to: %d\n", setting);
   int result = eth32_output_bit(handle, 0, 1, setting);
   if (result) {
     printf("Some kind of error happened when writing: %d\n", result);
   }
+  if(setting == 1)  eth32_set_led(handle, 1, 1);
+  if(setting == 0)   eth32_set_led(handle, 1, 0);
   // Print the output
   // asynPrint(pasynUser, ASYN_TRACEIO_DRIVER,
   //           "%s:%s: function=%d, name=%s, value=%f\n", driverName,

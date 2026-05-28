@@ -11,3 +11,4 @@ lib
 *.a
 *.d
 /.agent-shell/
+asynPortDriverETH32/src/O.linux-x86_64/ETH32AsynPortDriver
