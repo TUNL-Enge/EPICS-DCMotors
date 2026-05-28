@@ -1,0 +1,69 @@
+#+TITLE: ETH32 API Compile Notes
+#+DATE: 2026-03-27
+
+* Building the 64-bit Linux Library
+
+Run ~make~ from the ~linux/~ subdirectory to produce:
+- ~libeth32.a~ — static library
+- ~libeth32.so.1.2.01~ — shared library
+- ~eth32.h~ — Linux-flavoured header (prepends ~#define LINUX~)
+
+* Fixes Required for Modern GCC
+
+** Fix 1: Wrong include order in ~eth32.c~
+
+~eth32.c~ included ~eth32.h~ /before/ ~eth32_internal.h~:
+
+#+begin_src c
+/* BROKEN */
+#include "eth32.h"
+#include "eth32_internal.h"
+#+end_src
+
+The code's design requires ~eth32_internal.h~ to be included first.
+~eth32_internal.h~ sets ~#define ETH32_TYPEDEF~ and declares
+~typedef struct _eth32 *eth32~ before including ~eth32.h~, so that
+~eth32.h~ skips its fallback ~typedef void *eth32~.
+
+Including ~eth32.h~ first caused two errors:
+
+1. ~CALLCONVENTION~ was already defined, triggering the intentional
+   compile-guard in ~eth32_internal.h~:
+   #+begin_src c
+   #ifdef CALLCONVENTION
+   i_wont_compile!@#$;   /* fires if eth32.h was included first */
+   #endif
+   #+end_src
+
+2. A cascading type conflict on every function taking an ~eth32~
+   handle (~void *~ vs ~struct _eth32 *~).
+
+*Fix:* Remove the redundant ~#include "eth32.h"~ from ~eth32.c~.
+~eth32_internal.h~ already pulls it in.
+
+** Fix 2: Empty parameter lists in ~devtable.h~
+
+~devtable.h~ declared two functions with empty ~()~ parameter lists:
+
+#+begin_src c
+/* BROKEN */
+void eth32_devtable_init();
+void eth32_devtable_cleanup();
+#+end_src
+
+The actual definitions in ~devtable.c~ are:
+
+#+begin_src c
+void eth32_devtable_init(void) { ... }
+void eth32_devtable_cleanup(int mode) { ... }
+#+end_src
+
+Modern GCC (C23) treats ~()~ as ~(void)~, so the declaration of
+~eth32_devtable_cleanup~ conflicted with its definition.
+
+*Fix:* Update ~devtable.h~ to match the real signatures:
+
+#+begin_src c
+void eth32_devtable_init(void);
+void eth32_devtable_cleanup(int mode);
+#+end_src
