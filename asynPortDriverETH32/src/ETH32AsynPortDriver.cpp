@@ -327,7 +327,8 @@ void ETH32AsynPortDriver::setMotorPin(int port, int bit, epicsInt32 setting) {
     printf("Some kind of error happened when writing: %d to port %d, bit %d\n returned %d",
            0, port, bit_corresponding,result);
   }
-  led = std::max(0,bit_corresponding - bit);
+  // Toggle the LED to indicate which direction a motor is moving
+  led = !(bit % 2); //std::max(0,bit_corresponding - bit);
   eth32_set_led(handle, led, 0);
 
   // Now do whatever you intended with the bit you wanted
@@ -336,6 +337,7 @@ void ETH32AsynPortDriver::setMotorPin(int port, int bit, epicsInt32 setting) {
     printf("Some kind of error happened when writing: %d to port %d, bit %d\n returned %d",
            setting, port, bit, result);
   }
+  // Toggle the LED to indicate which direction a motor is moving
   led = bit % 2;
   eth32_set_led(handle, led, setting);
 #endif
