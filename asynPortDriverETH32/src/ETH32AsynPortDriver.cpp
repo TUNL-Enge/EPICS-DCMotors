@@ -303,6 +303,45 @@ asynStatus ETH32AsynPortDriver::writeFloat64(asynUser *pasynUser,
   return status;
 }
 
+// Generic function to switch on a motor pin
+void ETH32AsynPortDriver::setMotorPin(int port, int bit, epicsInt32 setting) {
+
+  int led, bit_corresponding, result;
+  
+  // based on the port and bit, we'll check the corresponding neighbor
+  // and make sure it's off before turning a pin on
+  //
+  // Forward pins are ALWAYS even
+  // Backward pins are ALWAYS odd
+  bit_corresponding = 0;
+  if (bit % 2 == 0) {
+    bit_corresponding = bit + 1;
+  } else {
+    bit_corresponding = bit - 1;
+  }
+
+#ifdef HAVE_ETH32
+  // Turn off corresponding bit in all circumstances
+  result = eth32_output_bit(handle, port, bit_corresponding, 0);
+  if (result) {
+    printf("Some kind of error happened when writing: %d to port %d, bit %d\n returned %d",
+           0, port, bit_corresponding,result);
+  }
+  led = std::max(0,bit_corresponding - bit);
+  eth32_set_led(handle, led, 0);
+
+  // Now do whatever you intended with the bit you wanted
+  result = eth32_output_bit(handle, port, bit, setting);
+  if (result) {
+    printf("Some kind of error happened when writing: %d to port %d, bit %d\n returned %d",
+           setting, port, bit, result);
+  }
+  led = bit % 2;
+  eth32_set_led(handle, led, setting);
+#endif
+}
+
+
 // Turn on/off digital channel 0
 void ETH32AsynPortDriver::setMotor1Forward() {
 
@@ -310,22 +349,8 @@ void ETH32AsynPortDriver::setMotor1Forward() {
 
   // Get the setting
   getIntegerParam(P_Motor1Forward, &setting);
-
-#ifdef HAVE_ETH32
-  // Call the ETH32 library to actually turn on or off the pin
-  printf("Setting port 0, bit 0 to: %d\n", setting);
-  int result = eth32_output_bit(handle, 0, 0, setting);
-  if (result) {
-    printf("Some kind of error happened when writing: %d\n", result);
-  }
-  if(setting == 1)  eth32_set_led(handle, 0, 1);
-  if(setting == 0)   eth32_set_led(handle, 0, 0);
-
-  // Print the output
-  // asynPrint(pasynUser, ASYN_TRACEIO_DRIVER,
-  //           "%s:%s: function=%d, name=%s, value=%f\n", driverName,
-  //           functionName, function, paramName, value);
-#endif
+  setMotorPin(0, 0, setting); 
+  
 }
 // Turn on/off digital channel 0
 void ETH32AsynPortDriver::setMotor1Backward() {
@@ -334,21 +359,7 @@ void ETH32AsynPortDriver::setMotor1Backward() {
 
   // Get the setting
   getIntegerParam(P_Motor1Backward, &setting);
-
-#ifdef HAVE_ETH32
-  // Call the ETH32 library to actually turn on or off the pin
-  printf("Setting port 0, bit 1 to: %d\n", setting);
-  int result = eth32_output_bit(handle, 0, 1, setting);
-  if (result) {
-    printf("Some kind of error happened when writing: %d\n", result);
-  }
-  if(setting == 1)  eth32_set_led(handle, 1, 1);
-  if(setting == 0)   eth32_set_led(handle, 1, 0);
-  // Print the output
-  // asynPrint(pasynUser, ASYN_TRACEIO_DRIVER,
-  //           "%s:%s: function=%d, name=%s, value=%f\n", driverName,
-  //           functionName, function, paramName, value);
-#endif
+  setMotorPin(0, 1, setting);
 }
 
 /* Configuration routine.  Called directly, or from the iocsh function below */
