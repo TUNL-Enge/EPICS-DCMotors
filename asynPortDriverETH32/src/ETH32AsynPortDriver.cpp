@@ -351,8 +351,9 @@ void ETH32AsynPortDriver::setMotor1Forward() {
 
   // Get the setting
   getIntegerParam(P_Motor1Forward, &setting);
-  setMotorPin(0, 0, setting); 
-  
+  setMotorPin(0, 0, setting);  
+  setIntegerParam(P_Motor1Backward, 0); // Turn off the other direction
+ 
 }
 // Turn on/off digital channel 0
 void ETH32AsynPortDriver::setMotor1Backward() {
@@ -362,6 +363,7 @@ void ETH32AsynPortDriver::setMotor1Backward() {
   // Get the setting
   getIntegerParam(P_Motor1Backward, &setting);
   setMotorPin(0, 1, setting);
+  setIntegerParam(P_Motor1Forward, 0); // Turn off the other direction
 }
 
 /* Configuration routine.  Called directly, or from the iocsh function below */
