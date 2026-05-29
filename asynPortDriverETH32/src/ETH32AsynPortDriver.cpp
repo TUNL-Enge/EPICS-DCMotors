@@ -370,29 +370,28 @@ void ETH32AsynPortDriver::setMotor1Backward() {
 
 extern "C" {
 
-/** EPICS iocsh callable function to call constructor for the
- * ETH32AsynPortDriver class.
- * \param[in] portName The name of the asyn port driver to be created.
- * \param[in] maxPoints The maximum  number of points in the volt and time
- * arrays */
-int ETH32AsynPortDriverConfigure(const char *portName) {
-  new ETH32AsynPortDriver(portName);
-  return (asynSuccess);
-}
+  /** EPICS iocsh callable function to call constructor for the
+   * ETH32AsynPortDriver class.
+   * \param[in] portName The name of the asyn port driver to be created.
+   * arrays */
+  int ETH32AsynPortDriverConfigure(const char *portName) {
+    new ETH32AsynPortDriver(portName);
+    return (asynSuccess);
+  }
 
-/* EPICS iocsh shell commands */
+  /* EPICS iocsh shell commands */
 
-static const iocshArg initArg0 = {"portName", iocshArgString};
-static const iocshArg *const initArgs[] = {&initArg0};
-static const iocshFuncDef initFuncDef = {"ETH32AsynPortDriverConfigure", 1,
-                                         initArgs};
-static void initCallFunc(const iocshArgBuf *args) {
-  ETH32AsynPortDriverConfigure(args[0].sval);
-}
+  static const iocshArg initArg0 = {"portName", iocshArgString};
+  static const iocshArg *const initArgs[] = {&initArg0};
+  static const iocshFuncDef initFuncDef = {"ETH32AsynPortDriverConfigure", 1,
+                                           initArgs};
+  static void initCallFunc(const iocshArgBuf *args) {
+    ETH32AsynPortDriverConfigure(args[0].sval);
+  }
 
-void ETH32AsynPortDriverRegister(void) {
-  iocshRegister(&initFuncDef, initCallFunc);
-}
+  void ETH32AsynPortDriverRegister(void) {
+    iocshRegister(&initFuncDef, initCallFunc);
+  }
 
-epicsExportRegistrar(ETH32AsynPortDriverRegister);
+  epicsExportRegistrar(ETH32AsynPortDriverRegister);
 }
