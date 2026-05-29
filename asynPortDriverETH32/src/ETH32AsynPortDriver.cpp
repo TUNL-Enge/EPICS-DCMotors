@@ -124,6 +124,14 @@ ETH32AsynPortDriver::ETH32AsynPortDriver(const char *portName)
   eth32_get_led(handle, 0, &eth32result);
   printf("LED 1 is set to %d\n", eth32result);
 
+  // Setup the analog input channels
+  eth32result = eth32_set_analog_state(handle, ADC_ENABLED);
+  // Configure logical channel 0 to read the physical channel 0 relative to ground (single-ended)
+  // This is the power-on default anyway, but is shown here for completeness:
+  eth32_set_analog_assignment(handle, 0, ANALOG_SE0);
+  // Configure the analog voltage reference to be the internal 5V source
+  eth32_set_analog_reference(handle, REF_INTERNAL);
+
   // Set every pin on port 0 to be an output port (there are 8 pins)
   eth32result = eth32_set_direction(handle, 0, DIR_OUTPUT);
 
@@ -365,6 +373,27 @@ void ETH32AsynPortDriver::setMotor1Backward() {
   setMotorPin(0, 1, setting);
   setIntegerParam(P_Motor1Forward, 0); // Turn off the other direction
 }
+
+// Get the current position of the motor
+void ETH32AsynPortDriver::getMotor1Pos() {
+
+  int value;
+
+#ifdef HAVE_ETH32
+  // Get the voltage on analog input 0
+  int result = eth32_input_analog(handle, 0, &value);
+  if (result) {
+    printf("Some kind of error happened when reading analog channel 0\n");
+  }
+#endif
+  
+  double Voltage = voltage_reference*(double)value/1024.0;
+  setDoubleParam(P_Motor1Position, Voltage);
+}
+
+/*----------------------------------------------------------------------
+  Standard AsynPortDriver stuff below here
+  ----------------------------------------------------------------------*/
 
 /* Configuration routine.  Called directly, or from the iocsh function below */
 

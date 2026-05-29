@@ -47,6 +47,7 @@ protected:
   int P_UpdateTime;
 
 private:
+  constexpr static const double voltage_reference = 5.0;
   /* Our data */
   epicsEventId eventId_;
   epicsFloat64 *pData_;
@@ -55,4 +56,5 @@ private:
   void setMotor1Forward();    // On Port 0, bit 0
   void setMotor1Backward();   // On Port 0, bit 1
   void setMotorPin(int port, int bit, epicsInt32 setting);   // Turn on and off an arbitrary pin
+  void getMotor1Pos();   // Turn on and off an arbitrary pin
 };
