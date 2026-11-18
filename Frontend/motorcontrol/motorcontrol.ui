@@ -56,6 +56,16 @@ QLabel#title_label {
   font-size: 18pt;
   font-weight: bold;
 }
+QLabel#motor_caption {
+  font-size: 12pt;
+  font-weight: bold;
+}
+QComboBox#motor_select {
+  font-size: 12pt;
+  font-weight: bold;
+  min-width: 120px;
+  min-height: 28px;
+}
 QLabel#prefix_label {
   color: #707070;
 }
@@ -101,6 +111,41 @@ QELabel {
       <spacer name="header_spacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="motor_caption">
+       <property name="text">
+        <string>Motor:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="motor_select">
+       <property name="toolTip">
+        <string>Choose which motor to monitor and control</string>
+       </property>
+       <item>
+        <property name="text">
+         <string>Motor 1</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <spacer name="prefix_spacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>0</height>
+        </size>
        </property>
       </spacer>
      </item>
@@ -163,10 +208,10 @@ QELabel {
              <set>Qt::AlignCenter</set>
             </property>
             <property name="variable" stdset="0">
-             <string>$(P)Run_RBV</string>
+             <string>$(P)M$(M)Run_RBV</string>
             </property>
             <property name="variableSubstitutions" stdset="0">
-             <string>P=testETH32:motors:</string>
+             <string>P=testETH32:motors:,M=1</string>
             </property>
            </widget>
           </item>
@@ -183,10 +228,10 @@ QELabel {
              <set>Qt::AlignCenter</set>
             </property>
             <property name="variable" stdset="0">
-             <string>$(P)M1Pos_RBV</string>
+             <string>$(P)M$(M)Pos_RBV</string>
             </property>
             <property name="variableSubstitutions" stdset="0">
-             <string>P=testETH32:motors:</string>
+             <string>P=testETH32:motors:,M=1</string>
             </property>
            </widget>
           </item>
@@ -203,10 +248,10 @@ QELabel {
              <set>Qt::AlignCenter</set>
             </property>
             <property name="variable" stdset="0">
-             <string>$(P)M1For_RBV</string>
+             <string>$(P)M$(M)For_RBV</string>
             </property>
             <property name="variableSubstitutions" stdset="0">
-             <string>P=testETH32:motors:</string>
+             <string>P=testETH32:motors:,M=1</string>
             </property>
            </widget>
           </item>
@@ -223,10 +268,10 @@ QELabel {
              <set>Qt::AlignCenter</set>
             </property>
             <property name="variable" stdset="0">
-             <string>$(P)M1Back_RBV</string>
+             <string>$(P)M$(M)Back_RBV</string>
             </property>
             <property name="variableSubstitutions" stdset="0">
-             <string>P=testETH32:motors:</string>
+             <string>P=testETH32:motors:,M=1</string>
             </property>
            </widget>
           </item>
@@ -265,10 +310,10 @@ QELabel {
                <string>Motor On</string>
               </property>
               <property name="variable" stdset="0">
-               <string>$(P)Run</string>
+               <string>$(P)M$(M)Run</string>
               </property>
               <property name="variableSubstitutions" stdset="0">
-               <string>P=testETH32:motors:</string>
+               <string>P=testETH32:motors:,M=1</string>
               </property>
              </widget>
             </item>
@@ -281,10 +326,10 @@ QELabel {
                <string>Motor Off</string>
               </property>
               <property name="variable" stdset="0">
-               <string>$(P)Run</string>
+               <string>$(P)M$(M)Run</string>
               </property>
               <property name="variableSubstitutions" stdset="0">
-               <string>P=testETH32:motors:</string>
+               <string>P=testETH32:motors:,M=1</string>
               </property>
               <property name="clickText">
                <string>0</string>
@@ -302,10 +347,10 @@ QELabel {
              <string>◀  Backward</string>
             </property>
             <property name="variable" stdset="0">
-             <string>$(P)M1Back</string>
+             <string>$(P)M$(M)Back</string>
             </property>
             <property name="variableSubstitutions" stdset="0">
-             <string>P=testETH32:motors:</string>
+             <string>P=testETH32:motors:,M=1</string>
             </property>
            </widget>
           </item>
@@ -328,10 +373,10 @@ QELabel {
              <string>Forward  ▶</string>
             </property>
             <property name="variable" stdset="0">
-             <string>$(P)M1For</string>
+             <string>$(P)M$(M)For</string>
             </property>
             <property name="variableSubstitutions" stdset="0">
-             <string>P=testETH32:motors:</string>
+             <string>P=testETH32:motors:,M=1</string>
             </property>
            </widget>
           </item>
@@ -454,10 +499,10 @@ QELabel {
            </size>
           </property>
           <property name="variable1" stdset="0">
-           <string>$(P)M1Pos_RBV</string>
+           <string>$(P)M$(M)Pos_RBV</string>
           </property>
           <property name="variableSubstitutions" stdset="0">
-           <string>P=testETH32:motors:</string>
+           <string>P=testETH32:motors:,M=1</string>
           </property>
           <property name="traceColor1">
            <color>

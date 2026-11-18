@@ -1,9 +1,11 @@
 # This Python file uses the following encoding: utf-8
 """Motor control GUI for the ETH32 EPICS driver.
 
-Manual control is handled entirely by the EPICS Qt (QE) widgets defined in
-motorcontrol.ui. This file adds automatic control: the user enters a desired
-position and the motor is driven there in a background thread.
+The user picks one of the driver's motors (1-8) from the selector. Manual
+control is handled by the EPICS Qt (QE) widgets defined in motorcontrol.ui,
+whose PV names use the macros $(P) (prefix) and $(M) (motor number). This
+file adds automatic control: the user enters a desired position and the
+selected motor is driven there in a background thread.
 
 The PV prefix defaults to "testETH32:motors:" and can be overridden with the
 ETH32_PREFIX environment variable.
@@ -17,17 +19,11 @@ from pathlib import Path
 
 from PySide6.QtCore import QDir, QFile, QObject, QThread, Signal
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtWidgets import (QApplication, QLabel, QLineEdit, QPushButton, QVBoxLayout,
-                               QWidget)
+from PySide6.QtWidgets import (QApplication, QComboBox, QGroupBox, QLabel, QLineEdit,
+                               QPushButton, QVBoxLayout, QWidget)
 
 PREFIX = os.environ.get("ETH32_PREFIX", "testETH32:motors:")
-PV_RUN = PREFIX + "Run"
-PV_FORWARD = PREFIX + "M1For"
-PV_BACKWARD = PREFIX + "M1Back"
-PV_POSITION = PREFIX + "M1Pos_RBV"
-PV_RUN_RBV = PREFIX + "Run_RBV"
-PV_FORWARD_RBV = PREFIX + "M1For_RBV"
-PV_BACKWARD_RBV = PREFIX + "M1Back_RBV"
+NUM_MOTORS = 8         # Motors 1-8 (one per ETH32 analog input)
 
 MIN_POS = 0.0          # Lowest valid target (driver clamps position to 0-10 V)
 MAX_POS = 10.0         # Highest valid target
@@ -40,6 +36,21 @@ CA_TIMEOUT = 2.0       # Channel Access timeout for caget/caput (s)
 
 class EpicsError(RuntimeError):
     pass
+
+
+class MotorPVs:
+    """The PV names for one motor (numbered from 1)."""
+
+    def __init__(self, motor):
+        base = f"{PREFIX}M{motor}"
+        self.motor = motor
+        self.run = base + "Run"
+        self.forward = base + "For"
+        self.backward = base + "Back"
+        self.position = base + "Pos_RBV"
+        self.run_rbv = base + "Run_RBV"
+        self.forward_rbv = base + "For_RBV"
+        self.backward_rbv = base + "Back_RBV"
 
 
 def caget(pv):
@@ -64,16 +75,17 @@ def caput(pv, value):
         raise EpicsError(f"Could not write {pv}") from exc
 
 
-def stop_motor():
-    """Turn off both directions and the run flag. Tries every PV even if one fails."""
+def stop_motor(pvs, run_off=True):
+    """Turn off both directions (and the run flag). Tries every PV even if one fails."""
     failed = []
-    for pv in (PV_FORWARD, PV_BACKWARD, PV_RUN):
+    for pv in (pvs.forward, pvs.backward) + ((pvs.run,) if run_off else ()):
         try:
             caput(pv, 0)
         except EpicsError:
             failed.append(pv)
     if failed:
-        raise EpicsError("Could not stop motor: failed to write " + ", ".join(failed))
+        raise EpicsError(f"Could not stop motor {pvs.motor}: failed to write "
+                         + ", ".join(failed))
 
 
 def parse_target(text):
@@ -91,13 +103,14 @@ def parse_target(text):
 
 
 class MoveWorker(QObject):
-    """Drives the motor to a target position. Runs inside a QThread."""
+    """Drives one motor to a target position. Runs inside a QThread."""
 
     message = Signal(str)
     finished = Signal()
 
-    def __init__(self, target):
+    def __init__(self, motor, target):
         super().__init__()
+        self.pvs = MotorPVs(motor)
         self.target = target
         self._abort = False
 
@@ -112,48 +125,49 @@ class MoveWorker(QObject):
         finally:
             # Always leave the motor stopped, whatever happened above.
             try:
-                stop_motor()
+                stop_motor(self.pvs)
             except EpicsError as exc:
                 self.message.emit(f"Error: {exc}. Check the motor manually!")
             self.finished.emit()
 
     def _move(self):
-        target = self.target
-        pos = caget(PV_POSITION)
+        target, pvs = self.target, self.pvs
+        name = f"Motor {pvs.motor}"
+        pos = caget(pvs.position)
         if abs(pos - target) <= TOLERANCE:
-            return f"Already at {pos:.3f}; target {target:.2f}."
+            return f"{name} already at {pos:.3f}; target {target:.2f}."
 
         forward = pos < target
-        direction_pv = PV_FORWARD if forward else PV_BACKWARD
-        direction_rbv = PV_FORWARD_RBV if forward else PV_BACKWARD_RBV
-        self.message.emit(f"Moving {'forward' if forward else 'backward'} "
+        direction_pv = pvs.forward if forward else pvs.backward
+        direction_rbv = pvs.forward_rbv if forward else pvs.backward_rbv
+        self.message.emit(f"{name}: moving {'forward' if forward else 'backward'} "
                           f"from {pos:.3f} to {target:.2f}...")
 
-        caput(PV_RUN, 1)
+        caput(pvs.run, 1)
         caput(direction_pv, 1)
 
         last_pos = pos
         last_change = time.monotonic()
         while True:
             if self._abort:
-                return "Move aborted."
+                return f"{name}: move aborted."
             time.sleep(POLL_INTERVAL)
-            pos = caget(PV_POSITION)
+            pos = caget(pvs.position)
 
             # Stop once we reach or pass the target (never reverse to chase it).
             if (forward and pos >= target - TOLERANCE) or \
                (not forward and pos <= target + TOLERANCE):
-                return f"Reached {pos:.3f} (target {target:.2f})."
+                return f"{name} reached {pos:.3f} (target {target:.2f})."
 
             # Someone pressed a manual stop/direction/off button.
-            if caget(direction_rbv) == 0 or caget(PV_RUN_RBV) == 0:
-                return f"Move stopped externally at {pos:.3f}."
+            if caget(direction_rbv) == 0 or caget(pvs.run_rbv) == 0:
+                return f"{name}: move stopped externally at {pos:.3f}."
 
             now = time.monotonic()
             if abs(pos - last_pos) > 1e-6:
                 last_pos, last_change = pos, now
             elif now - last_change > STALL_TIMEOUT:
-                raise EpicsError(f"Motor stalled at {pos:.3f} "
+                raise EpicsError(f"{name} stalled at {pos:.3f} "
                                  f"(no movement for {STALL_TIMEOUT:g} s)")
 
 
@@ -172,15 +186,21 @@ class Widget(QWidget):
         self.desired_pos = self.findChild(QLineEdit, "desired_pos")
         self.status_message = self.findChild(QLabel, "status_message")
         self.prefix_label = self.findChild(QLabel, "prefix_label")
+        self.motor_select = self.findChild(QComboBox, "motor_select")
+        self.plot_group = self.findChild(QGroupBox, "plot_group")
         if not all((self.move_button, self.stop_button, self.desired_pos,
-                    self.status_message, self.prefix_label)):
+                    self.status_message, self.prefix_label, self.motor_select,
+                    self.plot_group)):
             raise RuntimeError("motorcontrol.ui is missing a required widget")
-
-        # Point every QE widget at the configured PV prefix.
-        for child in self.findChildren(QWidget):
-            if child.property("variableSubstitutions") is not None:
-                child.setProperty("variableSubstitutions", f"P={PREFIX}")
+        self.qe_widgets = [w for w in self.findChildren(QWidget)
+                           if w.property("variableSubstitutions") is not None]
         self.prefix_label.setText(f"PV prefix: {PREFIX}")
+
+        self.motor_select.clear()
+        for motor in range(1, NUM_MOTORS + 1):
+            self.motor_select.addItem(f"Motor {motor}", motor)
+        self.motor_select.currentIndexChanged.connect(self.select_motor)
+        self.select_motor()
 
         self.move_button.clicked.connect(self.update_position)
         self.desired_pos.returnPressed.connect(self.update_position)
@@ -207,6 +227,19 @@ class Widget(QWidget):
         self.setMinimumSize(ui.minimumSize())
         self.resize(ui.size())
 
+    @property
+    def motor(self):
+        """The currently selected motor number (1 to NUM_MOTORS)."""
+        return self.motor_select.currentData()
+
+    def select_motor(self):
+        """Point every QE widget at the selected motor's PVs."""
+        for widget in self.qe_widgets:
+            widget.setProperty("variableSubstitutions", f"P={PREFIX},M={self.motor}")
+        self.plot_group.setTitle(f"Motor {self.motor} Position History (last 60 s)")
+        self.show_message(f"Motor {self.motor} selected. "
+                          "Enter a target position and press Move.")
+
     def update_position(self):
         if self.thread is not None:
             self.show_message("A move is already in progress.")
@@ -220,9 +253,11 @@ class Widget(QWidget):
                 f"{MIN_POS:g} to {MAX_POS:g} in steps of {STEP:g}.")
             return
 
+        # Keep the selector on the moving motor until the move is over.
         self.move_button.setEnabled(False)
+        self.motor_select.setEnabled(False)
         self.thread = QThread(self)
-        self.worker = MoveWorker(target)
+        self.worker = MoveWorker(self.motor, target)
         self.worker.moveToThread(self.thread)
         self.thread.started.connect(self.worker.run)
         self.worker.message.connect(self.show_message)
@@ -231,24 +266,21 @@ class Widget(QWidget):
         self.thread.start()
 
     def stop(self):
-        """Stop all motion: abort any automatic move and clear both directions."""
+        """Stop the selected motor: abort any automatic move and clear both directions."""
         if self.worker is not None:
             self.worker.abort()
         # Run the writes off the GUI thread so a slow IOC can't freeze the window.
-        threading.Thread(target=self._stop_directions, daemon=True).start()
+        threading.Thread(target=self._stop_directions, args=(MotorPVs(self.motor),),
+                         daemon=True).start()
 
-    def _stop_directions(self):
-        failed = []
-        for pv in (PV_FORWARD, PV_BACKWARD):
-            try:
-                caput(pv, 0)
-            except EpicsError:
-                failed.append(pv)
-        if failed:
-            self.stop_message.emit("Error: Stop failed to write " + ", ".join(failed)
-                                   + ". Check the motor manually!")
-        elif self.worker is None:
-            self.stop_message.emit("Motor stopped.")
+    def _stop_directions(self, pvs):
+        try:
+            stop_motor(pvs, run_off=False)
+        except EpicsError as exc:
+            self.stop_message.emit(f"Error: {exc}. Check the motor manually!")
+            return
+        if self.worker is None:
+            self.stop_message.emit(f"Motor {pvs.motor} stopped.")
 
     def show_message(self, text):
         print(text)
@@ -261,6 +293,7 @@ class Widget(QWidget):
         self.worker = None
         self.thread = None
         self.move_button.setEnabled(True)
+        self.motor_select.setEnabled(True)
 
     def closeEvent(self, event):
         # Stop any move in progress before the window goes away.

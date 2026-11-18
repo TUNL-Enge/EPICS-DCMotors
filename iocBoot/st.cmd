@@ -7,14 +7,16 @@ ETH32AsynPortDriver_registerRecordDeviceDriver(pdbbase)
 ETH32AsynPortDriverConfigure("testETH32")
 
 dbLoadRecords("../db/ETH32AsynPortDriver.db","P=testETH32:,R=motors:,PORT=testETH32,ADDR=0,TIMEOUT=1")
+# Motors 1-8 (records from ETH32Motor.template, one asyn address per motor)
+dbLoadRecords("../db/ETH32Motors.db","P=testETH32:,R=motors:,PORT=testETH32,TIMEOUT=1")
 dbLoadRecords("../db/asynRecord.db","P=testETH32:,R=asyn1,PORT=testETH32,ADDR=0,OMAX=80,IMAX=80")
 #asynSetTraceMask("testAPD",0,0xff)
 asynSetTraceIOMask("testETH32",0,0x2)
 iocInit()
 
-## Run this to get something
+## Run this to get something (motor 1; use M2..M8 for the others)
 ## caget testETH32:motors:M1Pos_RBV
-## caput testETH32:motors:Run 1
+## caput testETH32:motors:M1Run 1
 ## caget testETH32:motors:M1Pos_RBV
 ## caput testETH32:motors:M1For 1
 ## caget testETH32:motors:M1Pos_RBV

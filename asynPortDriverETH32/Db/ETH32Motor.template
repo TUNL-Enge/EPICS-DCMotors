@@ -1,0 +1,92 @@
+###################################################################
+#  Records for one motor. Load once per motor with:               #
+#    N    - motor number, 1 to 8 (used in the PV names)           #
+#    ADDR - asyn address, N-1                                     #
+#  Motor N's direction pins are port (N-1)/4, bits 2*((N-1)%4)    #
+#  (forward) and 2*((N-1)%4)+1 (backward). Its position is read   #
+#  from analog channel N-1.                                       #
+###################################################################
+
+###################################################################
+#  Run/stop this motor. Turning it off also stops both directions #
+###################################################################
+record(bo, "$(P)$(R)M$(N)Run")
+{
+    field(PINI,  "1")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))MOTOR_RUN")
+    field(ZNAM, "Stop")
+    field(ONAM, "Run")
+}
+
+record(bi, "$(P)$(R)M$(N)Run_RBV")
+{
+    field(PINI, "1")
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))MOTOR_RUN")
+    field(ZNAM, "Stopped")
+    field(ZSV,  "NO_ALARM")
+    field(ONAM, "Running")
+    field(OSV,  "MINOR")
+    field(SCAN, "I/O Intr")
+}
+
+###################################################################
+#  Forward direction (even bit)                                   #
+###################################################################
+record(bo, "$(P)$(R)M$(N)For")
+{
+    field(PINI,  "0")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))MOTOR_FORWARD")
+    field(ZNAM, "Off")
+    field(ONAM, "On")
+}
+
+record(bi, "$(P)$(R)M$(N)For_RBV")
+{
+    field(PINI, "0")
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))MOTOR_FORWARD")
+    field(ZNAM, "Off")
+    field(ZSV,  "NO_ALARM")
+    field(ONAM, "On")
+    field(OSV,  "MINOR")
+    field(SCAN, "I/O Intr")
+}
+
+###################################################################
+#  Backward direction (odd bit)                                   #
+###################################################################
+record(bo, "$(P)$(R)M$(N)Back")
+{
+    field(PINI,  "0")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))MOTOR_BACKWARD")
+    field(ZNAM, "Off")
+    field(ONAM, "On")
+}
+
+record(bi, "$(P)$(R)M$(N)Back_RBV")
+{
+    field(PINI, "0")
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))MOTOR_BACKWARD")
+    field(ZNAM, "Off")
+    field(ZSV,  "NO_ALARM")
+    field(ONAM, "On")
+    field(OSV,  "MINOR")
+    field(SCAN, "I/O Intr")
+}
+
+###################################################################
+#  Position: the voltage on this motor's analog channel           #
+###################################################################
+record(ai, "$(P)$(R)M$(N)Pos_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynFloat64")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))MOTOR_POS")
+   field(PREC, "4")
+   field(SCAN, "I/O Intr")
+}
