@@ -12,3 +12,6 @@ lib
 *.d
 /.agent-shell/
 asynPortDriverETH32/src/O.linux-x86_64/ETH32AsynPortDriver
+
+# Ignore generated build output in O.Common folders
+O.Common
