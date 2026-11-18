@@ -11,12 +11,14 @@ ETH32_PREFIX environment variable.
 import os
 import subprocess
 import sys
+import threading
 import time
 from pathlib import Path
 
 from PySide6.QtCore import QFile, QObject, QThread, Signal
 from PySide6.QtUiTools import QUiLoader
-from PySide6.QtWidgets import QApplication, QLabel, QLineEdit, QPushButton, QWidget
+from PySide6.QtWidgets import (QApplication, QLabel, QLineEdit, QPushButton, QVBoxLayout,
+                               QWidget)
 
 PREFIX = os.environ.get("ETH32_PREFIX", "testETH32:motors:")
 PV_RUN = PREFIX + "Run"
@@ -112,7 +114,7 @@ class MoveWorker(QObject):
             try:
                 stop_motor()
             except EpicsError as exc:
-                self.message.emit(f"Error: {exc}\nCheck the motor manually!")
+                self.message.emit(f"Error: {exc}. Check the motor manually!")
             self.finished.emit()
 
     def _move(self):
@@ -124,7 +126,7 @@ class MoveWorker(QObject):
         forward = pos < target
         direction_pv = PV_FORWARD if forward else PV_BACKWARD
         direction_rbv = PV_FORWARD_RBV if forward else PV_BACKWARD_RBV
-        self.message.emit(f"Moving {'forward' if forward else 'backward'}\n"
+        self.message.emit(f"Moving {'forward' if forward else 'backward'} "
                           f"from {pos:.3f} to {target:.2f}...")
 
         caput(PV_RUN, 1)
@@ -151,11 +153,13 @@ class MoveWorker(QObject):
             if abs(pos - last_pos) > 1e-6:
                 last_pos, last_change = pos, now
             elif now - last_change > STALL_TIMEOUT:
-                raise EpicsError(f"Motor stalled at {pos:.3f}\n"
+                raise EpicsError(f"Motor stalled at {pos:.3f} "
                                  f"(no movement for {STALL_TIMEOUT:g} s)")
 
 
 class Widget(QWidget):
+
+    stop_message = Signal(str)  # Emitted from the Stop helper thread
 
     def __init__(self):
         super().__init__()
@@ -163,16 +167,25 @@ class Widget(QWidget):
         self.thread = None
         self.worker = None
 
-        self.automatic_pos = self.findChild(QPushButton, "automatic_control")
+        self.move_button = self.findChild(QPushButton, "move_button")
+        self.stop_button = self.findChild(QPushButton, "stop_button")
         self.desired_pos = self.findChild(QLineEdit, "desired_pos")
-        self.error_status = self.findChild(QLabel, "error_status")
-        if not (self.automatic_pos and self.desired_pos and self.error_status):
-            raise RuntimeError("motorcontrol.ui is missing an automatic-control widget")
+        self.status_message = self.findChild(QLabel, "status_message")
+        self.prefix_label = self.findChild(QLabel, "prefix_label")
+        if not all((self.move_button, self.stop_button, self.desired_pos,
+                    self.status_message, self.prefix_label)):
+            raise RuntimeError("motorcontrol.ui is missing a required widget")
 
-        self.automatic_pos.clicked.connect(self.update_position)
+        # Point every QE widget at the configured PV prefix.
+        for child in self.findChildren(QWidget):
+            if child.property("variableSubstitutions") is not None:
+                child.setProperty("variableSubstitutions", f"P={PREFIX}")
+        self.prefix_label.setText(f"PV prefix: {PREFIX}")
+
+        self.move_button.clicked.connect(self.update_position)
         self.desired_pos.returnPressed.connect(self.update_position)
-        self.error_status.setText("The most recent automatic control message\n"
-                                  "will be placed here!")
+        self.stop_button.clicked.connect(self.stop)
+        self.stop_message.connect(self.show_message)
 
     def load_ui(self):
         loader = QUiLoader()
@@ -184,23 +197,28 @@ class Widget(QWidget):
         ui_file.close()
         if ui is None:
             raise RuntimeError(f"Cannot load {path}: {loader.errorString()}")
+        # Put the loaded form in a layout so it resizes with the window.
+        layout = QVBoxLayout(self)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.addWidget(ui)
+        self.setWindowTitle(ui.windowTitle())
+        self.setMinimumSize(ui.minimumSize())
         self.resize(ui.size())
 
     def update_position(self):
         if self.thread is not None:
-            self.error_status.setText("A move is already in progress.")
+            self.show_message("A move is already in progress.")
             return
 
         text = self.desired_pos.text().strip()
         target = parse_target(text)
         if target is None:
-            self.error_status.setText(
-                f"{text!r} is not a valid input!\n"
-                f"Valid inputs are between {MIN_POS:g} and {MAX_POS:g}\n"
-                f"and divisible by {STEP:g}.")
+            self.show_message(
+                f"\"{text}\" is not a valid position. Enter a number from "
+                f"{MIN_POS:g} to {MAX_POS:g} in steps of {STEP:g}.")
             return
 
-        self.automatic_pos.setEnabled(False)
+        self.move_button.setEnabled(False)
         self.thread = QThread(self)
         self.worker = MoveWorker(target)
         self.worker.moveToThread(self.thread)
@@ -210,9 +228,29 @@ class Widget(QWidget):
         self.thread.finished.connect(self.move_done)
         self.thread.start()
 
+    def stop(self):
+        """Stop all motion: abort any automatic move and clear both directions."""
+        if self.worker is not None:
+            self.worker.abort()
+        # Run the writes off the GUI thread so a slow IOC can't freeze the window.
+        threading.Thread(target=self._stop_directions, daemon=True).start()
+
+    def _stop_directions(self):
+        failed = []
+        for pv in (PV_FORWARD, PV_BACKWARD):
+            try:
+                caput(pv, 0)
+            except EpicsError:
+                failed.append(pv)
+        if failed:
+            self.stop_message.emit("Error: Stop failed to write " + ", ".join(failed)
+                                   + ". Check the motor manually!")
+        elif self.worker is None:
+            self.stop_message.emit("Motor stopped.")
+
     def show_message(self, text):
         print(text)
-        self.error_status.setText(text)
+        self.status_message.setText(text)
 
     def move_done(self):
         self.thread.wait()
@@ -220,7 +258,7 @@ class Widget(QWidget):
         self.thread.deleteLater()
         self.worker = None
         self.thread = None
-        self.automatic_pos.setEnabled(True)
+        self.move_button.setEnabled(True)
 
     def closeEvent(self, event):
         # Stop any move in progress before the window goes away.

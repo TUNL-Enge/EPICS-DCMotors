@@ -6,410 +6,499 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>525</height>
+    <width>900</width>
+    <height>540</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string>Widget</string>
+  <property name="minimumSize">
+   <size>
+    <width>820</width>
+    <height>500</height>
+   </size>
   </property>
-  <widget class="QEPushButton" name="motor_on">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>70</y>
-     <width>108</width>
-     <height>28</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Turn Motor On</string>
-   </property>
-   <property name="variable" stdset="0">
-    <string>testETH32:motors:Run</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="desired_pos">
-   <property name="geometry">
-    <rect>
-     <x>120</x>
-     <y>250</y>
-     <width>135</width>
-     <height>28</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="current_pos">
-   <property name="geometry">
-    <rect>
-     <x>490</x>
-     <y>280</y>
-     <width>100</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Current Position:</string>
-   </property>
-  </widget>
-  <widget class="QEPlot" name="plot">
-   <property name="geometry">
-    <rect>
-     <x>330</x>
-     <y>60</y>
-     <width>441</width>
-     <height>211</height>
-    </rect>
-   </property>
-   <property name="variable1" stdset="0">
-    <string>testETH32:motors:M1Pos_RBV</string>
-   </property>
-   <property name="variable2" stdset="0">
-    <string/>
-   </property>
-   <property name="variable3" stdset="0">
-    <string/>
-   </property>
-   <property name="traceLegend1">
-    <string/>
-   </property>
-   <property name="title">
-    <string>Motor Position (m) vs Time (s) Plot</string>
-   </property>
-   <property name="xUnit">
-    <string>time (s)</string>
-   </property>
-   <property name="yUnit">
-    <string>motor positon (m)</string>
-   </property>
-   <property name="timeSpan">
-    <number>60</number>
-   </property>
-  </widget>
-  <widget class="QEPushButton" name="qepushbutton">
-   <property name="geometry">
-    <rect>
-     <x>130</x>
-     <y>70</y>
-     <width>111</width>
-     <height>28</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Move Forwards</string>
-   </property>
-   <property name="variable" stdset="0">
-    <string>testETH32:motors:M1For</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_2">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>260</y>
-     <width>103</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Desired Position: </string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_3">
-   <property name="geometry">
-    <rect>
-     <x>9</x>
-     <y>9</y>
-     <width>651</width>
-     <height>36</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Yrsa SemiBold</family>
-     <pointsize>26</pointsize>
-     <weight>75</weight>
-     <italic>true</italic>
-     <bold>true</bold>
-    </font>
-   </property>
-   <property name="frameShadow">
-    <enum>QFrame::Raised</enum>
-   </property>
-   <property name="text">
-    <string>Welcome to the amazing Enge Motor Control UI!</string>
-   </property>
-  </widget>
-  <widget class="QEPushButton" name="qepushbutton_4">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>110</y>
-     <width>111</width>
-     <height>28</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Turn Motor Off</string>
-   </property>
-   <property name="variable" stdset="0">
-    <string>testETH32:motors:Run</string>
-   </property>
-   <property name="clickText">
-    <string>0</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="motor_status">
-   <property name="geometry">
-    <rect>
-     <x>360</x>
-     <y>480</y>
-     <width>81</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>motor status:</string>
-   </property>
-  </widget>
-  <widget class="QEPushButton" name="qepushbutton_2">
-   <property name="geometry">
-    <rect>
-     <x>130</x>
-     <y>110</y>
-     <width>166</width>
-     <height>28</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Stop Forward Movement</string>
-   </property>
-   <property name="variable" stdset="0">
-    <string>testETH32:motors:M1For</string>
-   </property>
-   <property name="clickText">
-    <string>0</string>
-   </property>
-  </widget>
-  <widget class="QELabel" name="current_pos_RBV">
-   <property name="geometry">
-    <rect>
-     <x>600</x>
-     <y>280</y>
-     <width>46</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="variable" stdset="0">
-    <string>testETH32:motors:M1Pos_RBV</string>
-   </property>
-  </widget>
-  <widget class="QELabel" name="forward_status_RBV">
-   <property name="geometry">
-    <rect>
-     <x>600</x>
-     <y>480</y>
-     <width>28</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="variable" stdset="0">
-    <string>testETH32:motors:M1For</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="forward_status">
-   <property name="geometry">
-    <rect>
-     <x>510</x>
-     <y>480</y>
-     <width>90</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>forward status:</string>
-   </property>
-  </widget>
-  <widget class="QELabel" name="motor_status_RBV">
-   <property name="geometry">
-    <rect>
-     <x>440</x>
-     <y>480</y>
-     <width>41</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="variable" stdset="0">
-    <string>testETH32:motors:Run</string>
-   </property>
-  </widget>
-  <widget class="QEPushButton" name="qepushbutton_3">
-   <property name="geometry">
-    <rect>
-     <x>130</x>
-     <y>150</y>
-     <width>119</width>
-     <height>28</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Move Backwards</string>
-   </property>
-   <property name="variable" stdset="0">
-    <string>testETH32:motors:M1Back</string>
-   </property>
-  </widget>
-  <widget class="QEPushButton" name="qepushbutton_5">
-   <property name="geometry">
-    <rect>
-     <x>130</x>
-     <y>190</y>
-     <width>181</width>
-     <height>28</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Stop Backwards Movement</string>
-   </property>
-   <property name="variable" stdset="0">
-    <string>testETH32:motors:M1Back</string>
-   </property>
-   <property name="clickText">
-    <string>0</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_9">
-   <property name="geometry">
-    <rect>
-     <x>670</x>
-     <y>480</y>
-     <width>106</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>backwards:</string>
-   </property>
-  </widget>
-  <widget class="QELabel" name="qelabel_3">
-   <property name="geometry">
-    <rect>
-     <x>740</x>
-     <y>480</y>
-     <width>28</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="variable" stdset="0">
-    <string>testETH32:motors:M1Back</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>100</x>
-     <y>50</y>
-     <width>101</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Manual Control</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_4">
-   <property name="geometry">
-    <rect>
-     <x>80</x>
-     <y>230</y>
-     <width>111</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Automatic Control</string>
-   </property>
-  </widget>
-  <widget class="QEScalarHistogram" name="qescalarhistogram">
-   <property name="geometry">
-    <rect>
-     <x>350</x>
-     <y>320</y>
-     <width>431</width>
-     <height>151</height>
-    </rect>
-   </property>
-   <property name="autoBarGapWidths">
-    <bool>true</bool>
-   </property>
-   <property name="maximum">
-    <double>1.000000000000000</double>
-   </property>
-   <property name="variable1" stdset="0">
-    <string>testETH32:motors:Run</string>
-   </property>
-   <property name="variable2" stdset="0">
-    <string>testETH32:motors:M1For_RBV</string>
-   </property>
-   <property name="variable3" stdset="0">
-    <string>testETH32:motors:M1Back_RBV</string>
-   </property>
-   <property name="variable4" stdset="0">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_5">
-   <property name="geometry">
-    <rect>
-     <x>490</x>
-     <y>300</y>
-     <width>171</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Motor and Control Status </string>
-   </property>
-  </widget>
-  <widget class="QEPushButton" name="automatic_control">
-   <property name="geometry">
-    <rect>
-     <x>90</x>
-     <y>300</y>
-     <width>108</width>
-     <height>28</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Go!</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_6">
-   <property name="geometry">
-    <rect>
-     <x>70</x>
-     <y>340</y>
-     <width>171</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Automatic Control Messages:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="error_status">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>360</y>
-     <width>291</width>
-     <height>131</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>The most recent error will be put here.</string>
-   </property>
-  </widget>
+  <property name="windowTitle">
+   <string>Enge Motor Control</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QGroupBox {
+  font-weight: bold;
+  border: 1px solid palette(mid);
+  border-radius: 6px;
+  margin-top: 10px;
+  padding: 8px 6px 6px 6px;
+}
+QGroupBox::title {
+  subcontrol-origin: margin;
+  left: 10px;
+  padding: 0 4px;
+}
+QGroupBox QLabel, QGroupBox QPushButton, QGroupBox QLineEdit {
+  font-weight: normal;
+}
+QPushButton {
+  min-height: 26px;
+  padding: 0 10px;
+}
+QPushButton#stop_button {
+  font-weight: bold;
+  color: white;
+  background-color: #c0392b;
+  border: 1px solid #962d22;
+  border-radius: 4px;
+}
+QPushButton#stop_button:pressed {
+  background-color: #962d22;
+}
+QPushButton#move_button {
+  font-weight: bold;
+}
+QLabel#title_label {
+  font-size: 18pt;
+  font-weight: bold;
+}
+QLabel#prefix_label {
+  color: #707070;
+}
+QLabel#status_message {
+  border: 1px solid palette(mid);
+  border-radius: 4px;
+  padding: 6px;
+  background-color: palette(base);
+}
+QELabel {
+  border: 1px solid palette(mid);
+  border-radius: 3px;
+  padding: 2px 6px;
+  min-width: 70px;
+}</string>
+  </property>
+  <layout class="QVBoxLayout" name="main_layout">
+   <property name="spacing">
+    <number>10</number>
+   </property>
+   <property name="leftMargin">
+    <number>14</number>
+   </property>
+   <property name="topMargin">
+    <number>12</number>
+   </property>
+   <property name="rightMargin">
+    <number>14</number>
+   </property>
+   <property name="bottomMargin">
+    <number>14</number>
+   </property>
+   <item>
+    <layout class="QHBoxLayout" name="header_layout">
+     <item>
+      <widget class="QLabel" name="title_label">
+       <property name="text">
+        <string>Enge Motor Control</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="header_spacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="prefix_label">
+       <property name="text">
+        <string>PV prefix: testETH32:motors:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignBottom</set>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="body_layout">
+     <property name="spacing">
+      <number>12</number>
+     </property>
+     <item>
+      <layout class="QVBoxLayout" name="left_layout">
+       <property name="spacing">
+        <number>10</number>
+       </property>
+       <item>
+        <widget class="QGroupBox" name="status_group">
+         <property name="minimumSize">
+          <size>
+           <width>320</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>360</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="title">
+          <string>Status</string>
+         </property>
+         <layout class="QGridLayout" name="status_layout">
+          <property name="horizontalSpacing">
+           <number>10</number>
+          </property>
+          <property name="verticalSpacing">
+           <number>6</number>
+          </property>
+          <item row="0" column="0">
+           <widget class="QLabel" name="run_caption">
+            <property name="text">
+             <string>Motor:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QELabel" name="run_rbv">
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <property name="variable" stdset="0">
+             <string>$(P)Run_RBV</string>
+            </property>
+            <property name="variableSubstitutions" stdset="0">
+             <string>P=testETH32:motors:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QLabel" name="position_caption">
+            <property name="text">
+             <string>Position:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="QELabel" name="position_rbv">
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <property name="variable" stdset="0">
+             <string>$(P)M1Pos_RBV</string>
+            </property>
+            <property name="variableSubstitutions" stdset="0">
+             <string>P=testETH32:motors:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="forward_caption">
+            <property name="text">
+             <string>Forward:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QELabel" name="forward_rbv">
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <property name="variable" stdset="0">
+             <string>$(P)M1For_RBV</string>
+            </property>
+            <property name="variableSubstitutions" stdset="0">
+             <string>P=testETH32:motors:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QLabel" name="backward_caption">
+            <property name="text">
+             <string>Backward:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="3">
+           <widget class="QELabel" name="backward_rbv">
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+            <property name="variable" stdset="0">
+             <string>$(P)M1Back_RBV</string>
+            </property>
+            <property name="variableSubstitutions" stdset="0">
+             <string>P=testETH32:motors:</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="manual_group">
+         <property name="maximumSize">
+          <size>
+           <width>360</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="title">
+          <string>Manual Control</string>
+         </property>
+         <layout class="QGridLayout" name="manual_layout">
+          <property name="horizontalSpacing">
+           <number>6</number>
+          </property>
+          <property name="verticalSpacing">
+           <number>8</number>
+          </property>
+          <item row="0" column="0" colspan="3">
+           <layout class="QHBoxLayout" name="power_layout">
+            <property name="spacing">
+             <number>6</number>
+            </property>
+            <item>
+             <widget class="QEPushButton" name="run_on_button">
+              <property name="toolTip">
+               <string>Enable the motor (Run = 1)</string>
+              </property>
+              <property name="text">
+               <string>Motor On</string>
+              </property>
+              <property name="variable" stdset="0">
+               <string>$(P)Run</string>
+              </property>
+              <property name="variableSubstitutions" stdset="0">
+               <string>P=testETH32:motors:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QEPushButton" name="run_off_button">
+              <property name="toolTip">
+               <string>Disable the motor (Run = 0)</string>
+              </property>
+              <property name="text">
+               <string>Motor Off</string>
+              </property>
+              <property name="variable" stdset="0">
+               <string>$(P)Run</string>
+              </property>
+              <property name="variableSubstitutions" stdset="0">
+               <string>P=testETH32:motors:</string>
+              </property>
+              <property name="clickText">
+               <string>0</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="1" column="0">
+           <widget class="QEPushButton" name="backward_button">
+            <property name="toolTip">
+             <string>Drive the motor backward (motor must be on)</string>
+            </property>
+            <property name="text">
+             <string>◀  Backward</string>
+            </property>
+            <property name="variable" stdset="0">
+             <string>$(P)M1Back</string>
+            </property>
+            <property name="variableSubstitutions" stdset="0">
+             <string>P=testETH32:motors:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QPushButton" name="stop_button">
+            <property name="toolTip">
+             <string>Stop all motion and abort any automatic move</string>
+            </property>
+            <property name="text">
+             <string>■  Stop</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QEPushButton" name="forward_button">
+            <property name="toolTip">
+             <string>Drive the motor forward (motor must be on)</string>
+            </property>
+            <property name="text">
+             <string>Forward  ▶</string>
+            </property>
+            <property name="variable" stdset="0">
+             <string>$(P)M1For</string>
+            </property>
+            <property name="variableSubstitutions" stdset="0">
+             <string>P=testETH32:motors:</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="automatic_group">
+         <property name="maximumSize">
+          <size>
+           <width>360</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="title">
+          <string>Automatic Control</string>
+         </property>
+         <layout class="QGridLayout" name="automatic_layout">
+          <property name="horizontalSpacing">
+           <number>6</number>
+          </property>
+          <property name="verticalSpacing">
+           <number>8</number>
+          </property>
+          <item row="0" column="0">
+           <widget class="QLabel" name="target_caption">
+            <property name="text">
+             <string>Target position:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="desired_pos">
+            <property name="toolTip">
+             <string>0 to 10, in steps of 0.05</string>
+            </property>
+            <property name="placeholderText">
+             <string>0.00 – 10.00</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QPushButton" name="move_button">
+            <property name="toolTip">
+             <string>Drive the motor to the target position</string>
+            </property>
+            <property name="text">
+             <string>Move</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0" colspan="3">
+           <widget class="QLabel" name="status_message">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>64</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Enter a target position and press Move.</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <spacer name="left_spacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="plot_group">
+       <property name="title">
+        <string>Position History (last 60 s)</string>
+       </property>
+       <layout class="QVBoxLayout" name="plot_layout">
+        <item>
+         <widget class="QEPlot" name="plot">
+          <property name="minimumSize">
+           <size>
+            <width>400</width>
+            <height>300</height>
+           </size>
+          </property>
+          <property name="variable1" stdset="0">
+           <string>$(P)M1Pos_RBV</string>
+          </property>
+          <property name="variableSubstitutions" stdset="0">
+           <string>P=testETH32:motors:</string>
+          </property>
+          <property name="traceColor1">
+           <color>
+            <red>31</red>
+            <green>97</green>
+            <blue>180</blue>
+           </color>
+          </property>
+          <property name="traceWidth1">
+           <number>2</number>
+          </property>
+          <property name="traceLegend1">
+           <string/>
+          </property>
+          <property name="backgroundColor">
+           <color>
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </property>
+          <property name="gridEnableMajorX">
+           <bool>true</bool>
+          </property>
+          <property name="gridEnableMajorY">
+           <bool>true</bool>
+          </property>
+          <property name="gridMajorColor">
+           <color>
+            <red>220</red>
+            <green>220</green>
+            <blue>220</blue>
+           </color>
+          </property>
+          <property name="title">
+           <string/>
+          </property>
+          <property name="xUnit">
+           <string>Time (s)</string>
+          </property>
+          <property name="yUnit">
+           <string>Position</string>
+          </property>
+          <property name="autoScale">
+           <bool>false</bool>
+          </property>
+          <property name="yMin">
+           <double>0.000000000000000</double>
+          </property>
+          <property name="yMax">
+           <double>10.000000000000000</double>
+          </property>
+          <property name="displayAlarmStateOption">
+           <enum>QE::WhenInAlarm</enum>
+          </property>
+          <property name="timeSpan">
+           <number>60</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
  </widget>
  <customwidgets>
   <customwidget>
@@ -418,19 +507,14 @@
    <header>QELabel.h</header>
   </customwidget>
   <customwidget>
-   <class>QEPlot</class>
-   <extends>QEFrame</extends>
-   <header>QEPlot.h</header>
-  </customwidget>
-  <customwidget>
    <class>QEPushButton</class>
    <extends>QPushButton</extends>
    <header>QEPushButton.h</header>
   </customwidget>
   <customwidget>
-   <class>QEScalarHistogram</class>
-   <extends>QEHistogram</extends>
-   <header>QEScalarHistogram.h</header>
+   <class>QEPlot</class>
+   <extends>QEFrame</extends>
+   <header>QEPlot.h</header>
   </customwidget>
   <customwidget>
    <class>QEFrame</class>
@@ -438,15 +522,7 @@
    <header>QEFrame.h</header>
    <container>1</container>
   </customwidget>
-  <customwidget>
-   <class>QEHistogram</class>
-   <extends>QFrame</extends>
-   <header>QEHistogram.h</header>
-  </customwidget>
  </customwidgets>
- <resources>
-  <include location="../GUI/project/Chamber/resources.qrc"/>
-  <include location="resources.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
