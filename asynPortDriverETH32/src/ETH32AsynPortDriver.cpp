@@ -160,13 +160,7 @@ void ETH32AsynPortDriver::simTask(void) {
   /* Loop forever */
   while (1) {
     getIntegerParam(P_Run, &run);
-    getIntegerParam(P_Motor1Forward, &MotorForward);
-    getIntegerParam(P_Motor1Backward, &MotorBackward);
     getDoubleParam(P_UpdateTime, &updateTime);
-    // Get the current position
-    getDoubleParam(P_Motor1Position, &Voltage);
-    // std::cout << run << " " << MotorForward << " " << MotorBackward << " "
-    //           << Voltage << std::endl;
 
     // Release the lock while we wait for a command to start or wait for
     // updateTime
@@ -182,6 +176,14 @@ void ETH32AsynPortDriver::simTask(void) {
     getIntegerParam(P_Run, &run);
     if (!run)
       continue;
+
+    // Read the direction and position only now, after the wait, so a
+    // direction set (or cleared) while we were waiting is not missed.
+    getIntegerParam(P_Motor1Forward, &MotorForward);
+    getIntegerParam(P_Motor1Backward, &MotorBackward);
+    getDoubleParam(P_Motor1Position, &Voltage);
+    // std::cout << run << " " << MotorForward << " " << MotorBackward << " "
+    //           << Voltage << std::endl;
 
     // Get direction of motor. Default is no movement so simulation
     // can "run" with no movement
