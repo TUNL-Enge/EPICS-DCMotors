@@ -7,13 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>900</width>
-    <height>540</height>
+    <height>580</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>820</width>
-    <height>500</height>
+    <height>560</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -411,6 +411,31 @@ QELabel {
           <enum>Qt::Vertical</enum>
          </property>
         </spacer>
+       </item>
+       <item>
+        <widget class="QLabel" name="logo_label">
+         <property name="minimumSize">
+          <size>
+           <width>260</width>
+           <height>105</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>260</width>
+           <height>105</height>
+          </size>
+         </property>
+         <property name="toolTip">
+          <string>FENRIS</string>
+         </property>
+         <property name="pixmap">
+          <pixmap>assets/FENRISLogo-notext.png</pixmap>
+         </property>
+         <property name="scaledContents">
+          <bool>true</bool>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>

@@ -15,7 +15,7 @@ import threading
 import time
 from pathlib import Path
 
-from PySide6.QtCore import QFile, QObject, QThread, Signal
+from PySide6.QtCore import QDir, QFile, QObject, QThread, Signal
 from PySide6.QtUiTools import QUiLoader
 from PySide6.QtWidgets import (QApplication, QLabel, QLineEdit, QPushButton, QVBoxLayout,
                                QWidget)
@@ -188,8 +188,10 @@ class Widget(QWidget):
         self.stop_message.connect(self.show_message)
 
     def load_ui(self):
+        here = Path(__file__).resolve().parent
         loader = QUiLoader()
-        path = os.fspath(Path(__file__).resolve().parent / "motorcontrol.ui")
+        loader.setWorkingDirectory(QDir(os.fspath(here)))  # For relative image paths
+        path = os.fspath(here / "motorcontrol.ui")
         ui_file = QFile(path)
         if not ui_file.open(QFile.ReadOnly):
             raise RuntimeError(f"Cannot open {path}: {ui_file.errorString()}")
