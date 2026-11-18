@@ -29,7 +29,7 @@
     <string>testETH32:motors:Run</string>
    </property>
   </widget>
-  <widget class="QELineEdit" name="desired_pos">
+  <widget class="QLineEdit" name="desired_pos">
    <property name="geometry">
     <rect>
      <x>120</x>
@@ -416,11 +416,6 @@
    <class>QELabel</class>
    <extends>QLabel</extends>
    <header>QELabel.h</header>
-  </customwidget>
-  <customwidget>
-   <class>QELineEdit</class>
-   <extends>QLineEdit</extends>
-   <header>QELineEdit.h</header>
   </customwidget>
   <customwidget>
    <class>QEPlot</class>
