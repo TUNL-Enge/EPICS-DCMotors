@@ -39,7 +39,7 @@
 
 #define MAX_ENUM_STRING_SIZE 20
 
-#define HAVE_ETH32
+// #define HAVE_ETH32
 
 #ifdef HAVE_ETH32
 // Some parameters needed for connection with eth32
