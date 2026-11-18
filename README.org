@@ -14,6 +14,9 @@ Ethernet I/O board, using EPICS. It has two parts:
    with EPICS Qt (QE) widgets, for watching and driving one motor at a
    time, either by hand or by typing in a target position.
 
+#+CAPTION: The motor control GUI during an automatic move of motor 1 (simulation)
+[[file:docs/motorcontrol-gui.png]]
+
 The two parts talk only through EPICS Channel Access (CA) PVs, so any
 other CA client (~caget~, ~caput~, ~camonitor~, CS-Studio, ...) can use
 the IOC too.
@@ -38,6 +41,7 @@ the IOC too.
 | ~Frontend/motorcontrol/motorcontrol.py~  | The GUI program                                         |
 | ~Frontend/motorcontrol/motorcontrol.ui~  | The GUI layout (edit with Qt Designer)                  |
 | ~Frontend/motorcontrol/assets/~          | Images used by the GUI (the FENRIS logo)                |
+| ~docs/~                                  | Images for this README                                  |
 | ~bin/~, ~lib/~, ~db/~, ~dbd/~            | Build output, created by ~make~ (git-ignored)           |
 
 * Requirements
